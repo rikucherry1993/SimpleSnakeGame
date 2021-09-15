@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Simple Snake</string>
+    <string name="score_label_text">Score:</string>
+    <string name="default_score_text">0</string>
+    <string name="restart_button_text">RESTART</string>
+    <string name="up_button_description">up</string>
+    <string name="left_button_description">left</string>
+    <string name="right_button_description">right</string>
+    <string name="down_button_description">down</string>
+</resources>
