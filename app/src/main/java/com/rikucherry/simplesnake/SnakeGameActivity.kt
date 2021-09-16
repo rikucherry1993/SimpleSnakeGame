@@ -23,6 +23,10 @@ class SnakeGameActivity : AppCompatActivity() {
             game_view.updateApplePosition(it)
         })
 
+        viewModel.snake.observe(this, {
+            game_view.updateSnakeBody(it)
+        })
+
         viewModel.startGame()
     }
 }

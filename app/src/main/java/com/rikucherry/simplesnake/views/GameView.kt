@@ -22,22 +22,28 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var snake : List<Position>? = null
     private var state : State? = null
     private var sideLength = 0f
-    private var offset = 0f
+    private var offset = 1f
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.run {
             applePosition?.apply {
                 canvas.drawRect(
-                    (x * sideLength),
-                    (y * sideLength),
-                    ((x + 1) * sideLength),
-                    ((y + 1) * sideLength),
+                    (x * sideLength) + offset,
+                    (y * sideLength) + offset,
+                    ((x + 1) * sideLength) - offset,
+                    ((y + 1) * sideLength) - offset,
                     paintApple
                 )
             }
-            snake?.onEach {
-//                canvas.drawRect()
+            snake?.forEach {
+                canvas.drawRect(
+                    (it.x * sideLength) + offset,
+                    (it.y * sideLength) + offset,
+                    ((it.x + 1) * sideLength) - offset,
+                    ((it.y + 1) * sideLength) - offset,
+                    paintSnake
+                )
             }
         }
     }
@@ -50,5 +56,9 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     fun updateApplePosition(position: Position) {
         applePosition = position
+    }
+
+    fun updateSnakeBody(body: List<Position>) {
+        snake = body
     }
 }
