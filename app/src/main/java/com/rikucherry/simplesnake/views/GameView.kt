@@ -18,7 +18,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         color = context.resources.getColor(R.color.snake_color_alive)
     }
 
-    private var applePosition = Position(19, 19)
+    private var applePosition: Position? = null
     private var snake : List<Position>? = null
     private var state : State? = null
     private var sideLength = 0f
@@ -47,12 +47,8 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         sideLength = width.toFloat() / 20
     }
 
-    /**
-     * Generate new position for apple randomly
-     */
-    fun generateNew(position: Position) {
-        if (applePosition == null || applePosition == snake?.get(0)) {
-            //todo: generate new
-        }
+
+    fun updateApplePosition(position: Position) {
+        applePosition = position
     }
 }
