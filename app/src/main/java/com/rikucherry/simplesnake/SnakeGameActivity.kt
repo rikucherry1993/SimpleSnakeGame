@@ -30,7 +30,7 @@ class SnakeGameActivity : AppCompatActivity() {
         })
 
         viewModel.state.observe(this, {
-            when(it) {
+            when (it) {
                 //todo: change to alert dialog
                 GameViewModel.State.OVER -> {
                     viewModel.stopTimer()
@@ -54,10 +54,10 @@ class SnakeGameActivity : AppCompatActivity() {
             score_text.text = it.toString()
         })
 
-        arrow_up_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.UP)}
-        arrow_left_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.LEFT)}
-        arrow_right_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.RIGHT)}
-        arrow_down_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.DOWN)}
+        arrow_up_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.UP) }
+        arrow_left_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.LEFT) }
+        arrow_right_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.RIGHT) }
+        arrow_down_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.DOWN) }
         restart_button.setOnClickListener {
             viewModel.stopTimer()
             viewModel.startGame()

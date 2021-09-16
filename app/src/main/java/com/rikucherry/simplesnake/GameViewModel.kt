@@ -9,9 +9,9 @@ import kotlin.random.Random
 class GameViewModel : ViewModel() {
     private val range = 20
     private var snakeSize = 4
-    private var snakeBody= mutableListOf<Position>()
-    private val initialHead = Position(10,10)
-    private var direction : Direction = Direction.LEFT
+    private var snakeBody = mutableListOf<Position>()
+    private val initialHead = Position(10, 10)
+    private var direction: Direction = Direction.LEFT
     private var score = 0
     private lateinit var timer: Timer
     var applePosition = MutableLiveData<Position>()
@@ -46,14 +46,14 @@ class GameViewModel : ViewModel() {
         timer = fixedRateTimer("periodically timer", false, 200, 200) {
             // without copy(), snake body list would be changed directly
             val head = snakeBody.first().copy().apply {
-                when(direction) {
+                when (direction) {
                     Direction.LEFT -> x--
                     Direction.UP -> y--
                     Direction.RIGHT -> x++
                     Direction.DOWN -> y++
                 }
                 //after changing new head's position, check if a)body contains head b) head get out of canvas
-                if (snakeBody.contains(this) || x < 0 || x > range - 1 || y < 0 || y > range - 1 ) {
+                if (snakeBody.contains(this) || x < 0 || x > range - 1 || y < 0 || y > range - 1) {
                     state.postValue(State.OVER)
                 }
             }
@@ -90,7 +90,7 @@ class GameViewModel : ViewModel() {
         timer.cancel()
     }
 
-    fun changeDirection(dir:Direction) {
+    fun changeDirection(dir: Direction) {
         direction = dir
     }
 }
