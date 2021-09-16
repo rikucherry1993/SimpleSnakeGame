@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.rikucherry.simplesnake.GameViewModel.Position
-import com.rikucherry.simplesnake.GameViewModel.State
 import com.rikucherry.simplesnake.R
 
 class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
@@ -19,8 +18,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     private var applePosition: Position? = null
-    private var snake : List<Position>? = null
-    private var state : State? = null
+    private var snake: List<Position>? = null
     private var sideLength = 0f
     private var offset = 1f
 
