@@ -1,10 +1,13 @@
 package com.rikucherry.simplesnake
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_snake_game.*
 
 class SnakeGameActivity : AppCompatActivity() {
+    private lateinit var viewModel: GameViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_snake_game)
@@ -13,5 +16,13 @@ class SnakeGameActivity : AppCompatActivity() {
         game_toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+
+        //observe position of apple
+        viewModel.applePosition.observe(this, {
+            game_view.generateNew(it)
+        })
+
+
     }
 }
