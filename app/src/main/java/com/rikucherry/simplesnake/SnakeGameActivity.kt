@@ -1,7 +1,7 @@
 package com.rikucherry.simplesnake
 
 import android.os.Bundle
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_snake_game.*
@@ -34,13 +34,19 @@ class SnakeGameActivity : AppCompatActivity() {
                 //todo: change to alert dialog
                 GameViewModel.State.OVER -> {
                     viewModel.stopTimer()
-                    Toast.makeText(this, "GAME OVER!!", Toast.LENGTH_LONG).show()
+                    AlertDialog.Builder(this).setTitle("GAME OVER!!")
+                        .setMessage("Your score is: ${score_text.text}")
+                        .setNegativeButton("Quit") { _, _ ->
+                            finish()
+                        }.setPositiveButton("Play again") { dialog, _ ->
+                            run {
+                                dialog.dismiss()
+                                viewModel.startGame()
+                            }
+                        }.setCancelable(
+                            false
+                        ).show()
                 }
-
-                GameViewModel.State.PAUSED -> {
-                    //todo:
-                }
-
             }
         })
 
@@ -54,7 +60,7 @@ class SnakeGameActivity : AppCompatActivity() {
         arrow_down_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.DOWN)}
         restart_button.setOnClickListener {
             viewModel.stopTimer()
-            viewModel.startGame() 
+            viewModel.startGame()
         }
 
         viewModel.startGame()

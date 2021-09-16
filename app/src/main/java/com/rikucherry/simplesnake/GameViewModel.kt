@@ -20,7 +20,7 @@ class GameViewModel : ViewModel() {
     var realScore = MutableLiveData<Int>()
 
     data class Position(var x: Int, var y: Int)
-    enum class State { STARTED, PAUSED, OVER }
+    enum class State { STARTED, OVER }
     enum class Direction { LEFT, UP, RIGHT, DOWN }
 
     fun startGame() {
