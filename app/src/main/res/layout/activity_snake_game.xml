@@ -62,13 +62,22 @@
             app:elevation="12dp" />
     </RelativeLayout>
 
-    <com.rikucherry.simplesnake.views.GameView
-        android:id="@+id/game_view"
+    <com.rikucherry.simplesnake.views.SquareFrameLayout
+        android:id="@+id/game_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:background="@drawable/frame_canvas_background"
-        app:layout_constraintTop_toBottomOf="@+id/sub_action_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/sub_action_bar">
+
+        <com.rikucherry.simplesnake.views.GameView
+            android:id="@+id/game_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp" />
+
+    </com.rikucherry.simplesnake.views.SquareFrameLayout>
+
 
     <RelativeLayout
         android:id="@+id/direction_buttons"
@@ -77,7 +86,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_view">
+        app:layout_constraintTop_toBottomOf="@+id/game_frame">
 
         <ImageButton
             android:id="@+id/arrow_up_button"
