@@ -32,7 +32,6 @@ class SnakeGameActivity : AppCompatActivity() {
         viewModel.state.observe(this, {
             game_view.updateState(it)
             when (it) {
-                //todo: change to alert dialog
                 GameViewModel.State.OVER -> {
                     viewModel.stopTimer()
                     AlertDialog.Builder(this).setTitle("GAME OVER!!")
