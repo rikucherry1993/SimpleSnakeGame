@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.rikucherry.simplesnake.GameViewModel
 import com.rikucherry.simplesnake.GameViewModel.Position
 import com.rikucherry.simplesnake.R
 
@@ -13,12 +14,11 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         color = context.resources.getColor(R.color.apple_color)
     }
 
-    private val paintSnake = Paint().apply {
-        color = context.resources.getColor(R.color.snake_color_alive)
-    }
+    private lateinit var paintSnake : Paint
 
     private var applePosition: Position? = null
     private var snake: List<Position>? = null
+    private var alive = true
     private var sideLength = 0f
     private var offset = 1f
 
@@ -34,6 +34,16 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                     paintApple
                 )
             }
+
+            paintSnake = Paint().apply {
+                color = if (alive) {
+                    context.resources.getColor(R.color.snake_color_alive)
+                } else {
+                    context.resources.getColor(R.color.snake_color_dead)
+                }
+
+            }
+
             snake?.forEach {
                 canvas.drawRect(
                     (it.x * sideLength) + offset,
@@ -58,5 +68,9 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     fun updateSnakeBody(body: List<Position>) {
         snake = body
+    }
+
+    fun updateState (state: GameViewModel.State) {
+        alive = state != GameViewModel.State.OVER
     }
 }
