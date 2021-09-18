@@ -8,8 +8,8 @@ class ScoreRepository(private val scoreDao: ScoreDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(score: Score) {
-        scoreDao.insert(score)
+    suspend fun update(score: Score) {
+        scoreDao.update(score)
     }
 
     @Suppress("RedundantSuspendModifier")

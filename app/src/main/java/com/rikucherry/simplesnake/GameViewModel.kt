@@ -2,11 +2,17 @@ package com.rikucherry.simplesnake
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.rikucherry.simplesnake.data.Score
+import com.rikucherry.simplesnake.data.ScoreRepository
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 import kotlin.random.Random
 
-class GameViewModel : ViewModel() {
+class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
+
     private val range = 20
     private var snakeSize = 4
     private var snakeBody = mutableListOf<Position>()
@@ -92,5 +98,30 @@ class GameViewModel : ViewModel() {
 
     fun changeDirection(dir: Direction) {
         direction = dir
+    }
+
+    val lastBestScore = if (repository.bestScore.isEmpty())  0  else repository.bestScore[0].bestScore
+    fun updateScore(bestScore: Int): Boolean {
+        return (score > bestScore).also {
+            if (it) {
+                viewModelScope.launch {
+                    repository.update(Score(1, score))
+                }
+            }
+        }
+    }
+}
+
+/**
+ * View model Factory
+ * reference:https://developer.android.com/codelabs/android-room-with-a-view-kotlin#9
+ */
+class GameViewModelFactory(private val repository: ScoreRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return GameViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
