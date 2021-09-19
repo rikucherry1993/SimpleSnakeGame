@@ -10,6 +10,8 @@ abstract class ScoreDataBase : RoomDatabase() {
     abstract fun scoreDao(): ScoreDao
 
     companion object {
+        private const val DB_NAME = "score_database"
+
         @Volatile
         private var INSTANCE: ScoreDataBase? = null
 
@@ -18,8 +20,9 @@ abstract class ScoreDataBase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ScoreDataBase::class.java,
-                    "score_database",
-                ).build()
+                    DB_NAME,
+                ).allowMainThreadQueries() //todo: Due to "Cannot access database on the main thread since it may potentially lock the UI for a long period of time" bad! resolve later
+                    .build()
 
                 INSTANCE = instance
                 instance

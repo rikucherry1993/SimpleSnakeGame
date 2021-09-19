@@ -1,13 +1,15 @@
 package com.rikucherry.simplesnake
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_snake_game.*
 
 class SnakeGameActivity : AppCompatActivity() {
-    private lateinit var viewModel: GameViewModel
+    private val viewModel: GameViewModel by viewModels {
+        GameViewModelFactory((application as SnakeGameApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +19,6 @@ class SnakeGameActivity : AppCompatActivity() {
         game_toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
-        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
         //observe position of apple
         viewModel.applePosition.observe(this, {
@@ -34,8 +35,14 @@ class SnakeGameActivity : AppCompatActivity() {
             when (it) {
                 GameViewModel.State.OVER -> {
                     viewModel.stopTimer()
-                    AlertDialog.Builder(this).setTitle("GAME OVER!!")
-                        .setMessage("Your score is: ${score_text.text}")
+
+                    val lastBestScore = viewModel.lastBestScore
+                    val isBest = viewModel.updateScore(lastBestScore)
+
+                    AlertDialog.Builder(this).setTitle(
+                        if (isBest) {"BEST RECORD!"} else {"GAME OVER!"})
+                        .setMessage("Your score is: ${score_text.text}. "
+                            + if (isBest) {""} else {"Current best record is: $lastBestScore"})
                         .setNegativeButton("Quit") { _, _ ->
                             finish()
                         }.setPositiveButton("Play again") { dialog, _ ->
