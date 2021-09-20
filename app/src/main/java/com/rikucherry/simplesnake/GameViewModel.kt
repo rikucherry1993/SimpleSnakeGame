@@ -100,12 +100,15 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         direction = dir
     }
 
-    val lastBestScore = if (repository.bestScore.isEmpty())  0  else repository.bestScore[0].bestScore
+    fun getLastBest() =
+        if (repository.selectAll().isEmpty()) 0 else repository.selectAll()[0].bestScore
+
     fun updateScore(bestScore: Int): Boolean {
         return (score > bestScore).also {
             if (it) {
                 viewModelScope.launch {
-                    repository.update(Score(1, score))
+                    repository.deleteAll()
+                    repository.insert(Score(1, score))
                 }
             }
         }

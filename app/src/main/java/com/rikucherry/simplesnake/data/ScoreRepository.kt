@@ -4,12 +4,12 @@ import androidx.annotation.WorkerThread
 
 class ScoreRepository(private val scoreDao: ScoreDao) {
 
-    val bestScore: List<Score> = scoreDao.getBestScore()
+    fun selectAll() = scoreDao.getBestScore()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun update(score: Score) {
-        scoreDao.update(score)
+    suspend fun insert(score: Score) {
+        scoreDao.insert(score)
     }
 
     @Suppress("RedundantSuspendModifier")
