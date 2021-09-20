@@ -36,7 +36,7 @@ class SnakeGameActivity : AppCompatActivity() {
                 GameViewModel.State.OVER -> {
                     viewModel.stopTimer()
 
-                    val lastBestScore = viewModel.lastBestScore
+                    val lastBestScore = viewModel.getLastBest()
                     val isBest = viewModel.updateScore(lastBestScore)
 
                     AlertDialog.Builder(this).setTitle(
