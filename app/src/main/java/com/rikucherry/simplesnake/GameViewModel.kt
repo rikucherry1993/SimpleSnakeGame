@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.rikucherry.simplesnake.data.Score
 import com.rikucherry.simplesnake.data.ScoreRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 import kotlin.random.Random
@@ -24,6 +26,7 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
     var snake = MutableLiveData<List<Position>>()
     var state = MutableLiveData<State>()
     var realScore = MutableLiveData<Int>()
+    var lastBest = MutableLiveData<Int>()
 
     data class Position(var x: Int, var y: Int)
     enum class State { STARTED, OVER }
@@ -35,6 +38,7 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         score = 0
         realScore.value = score
         direction = Direction.LEFT
+        setLastBest()
 
         //Generate snake body
         snakeBody.clear()
@@ -100,8 +104,13 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         direction = dir
     }
 
-    fun getLastBest() =
-        if (repository.selectAll().isEmpty()) 0 else repository.selectAll()[0].bestScore
+    fun setLastBest() {
+        viewModelScope.launch {
+            lastBest.postValue(withContext(Dispatchers.IO) {
+                if (repository.selectAll().isEmpty()) 0 else repository.selectAll()[0].bestScore
+            })
+        }
+    }
 
     fun updateScore(bestScore: Int): Boolean {
         return (score > bestScore).also {

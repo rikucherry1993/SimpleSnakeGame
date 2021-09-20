@@ -21,8 +21,7 @@ abstract class ScoreDataBase : RoomDatabase() {
                     context.applicationContext,
                     ScoreDataBase::class.java,
                     DB_NAME,
-                ).allowMainThreadQueries() //todo: Due to "Cannot access database on the main thread since it may potentially lock the UI for a long period of time" bad! resolve later
-                    .build()
+                ).build()
 
                 INSTANCE = instance
                 instance
