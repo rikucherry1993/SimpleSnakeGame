@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SnakeGameActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -11,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/teal_200"
-        app:layout_constraintTop_toTopOf="parent"
         app:subtitleTextColor="@color/action_bar_text_color"
         app:titleTextColor="@color/action_bar_text_color" />
 
@@ -21,8 +21,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/game_toolbar">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/score_label"
@@ -91,8 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="@drawable/frame_canvas_background"
-        app:layout_constraintTop_toBottomOf="@+id/sub_action_bar">
+        android:background="@drawable/frame_canvas_background">
 
         <com.rikucherry.simplesnake.views.GameView
             android:id="@+id/game_view"
@@ -102,49 +100,98 @@
 
     </com.rikucherry.simplesnake.views.SquareFrameLayout>
 
-
-    <RelativeLayout
+    <com.rikucherry.simplesnake.views.SquareLinearLayout
         android:id="@+id/direction_buttons"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_frame">
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/arrow_up_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/arrow_left_button"
-            android:background="@drawable/button_up_selector"
-            android:contentDescription="@string/up_button_description" />
+        <LinearLayout
+            android:id="@+id/first_row_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/arrow_left_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/arrow_up_button"
-            android:background="@drawable/button_left_selector"
-            android:contentDescription="@string/left_button_description" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/arrow_right_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/arrow_up_button"
-            android:layout_toEndOf="@+id/arrow_up_button"
-            android:background="@drawable/button_right_selector"
-            android:contentDescription="@string/right_button_description" />
+            <ImageButton
+                android:id="@+id/arrow_up_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_up_selector"
+                android:contentDescription="@string/up_button_description" />
 
-        <ImageButton
-            android:id="@+id/arrow_down_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/arrow_left_button"
-            android:layout_toEndOf="@+id/arrow_left_button"
-            android:background="@drawable/button_down_selector"
-            android:contentDescription="@string/down_button_description" />
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/second_row_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/arrow_left_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_left_selector"
+                android:contentDescription="@string/left_button_description" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/arrow_right_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_right_selector"
+                android:contentDescription="@string/right_button_description" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/third_row_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/arrow_down_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_down_selector"
+                android:contentDescription="@string/down_button_description" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </com.rikucherry.simplesnake.views.SquareLinearLayout>
+</LinearLayout>

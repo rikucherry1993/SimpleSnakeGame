@@ -101,7 +101,9 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
     }
 
     fun changeDirection(dir: Direction) {
-        direction = dir
+        if (!isReverse(direction, dir)) {
+            direction = dir
+        }
     }
 
     fun setLastBest() {
@@ -121,6 +123,11 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
                 }
             }
         }
+    }
+
+    private fun isReverse(old: Direction, new: Direction): Boolean {
+        return (old == Direction.UP && new == Direction.DOWN || old == Direction.DOWN && new == Direction.UP) ||
+                (old == Direction.LEFT && new == Direction.RIGHT || old == Direction.RIGHT && new == Direction.LEFT)
     }
 }
 
