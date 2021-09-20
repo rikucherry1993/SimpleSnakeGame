@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Simple Snake</string>
     <string name="score_label_text">"Score: "</string>
+    <string name="score_best_label_text">"Best: "</string>
     <string name="default_score_text">0</string>
     <string name="restart_button_text">RESTART</string>
     <string name="up_button_description">up</string>

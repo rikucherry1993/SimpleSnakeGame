@@ -2,11 +2,19 @@ package com.rikucherry.simplesnake
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.rikucherry.simplesnake.data.Score
+import com.rikucherry.simplesnake.data.ScoreRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 import kotlin.random.Random
 
-class GameViewModel : ViewModel() {
+class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
+
     private val range = 20
     private var snakeSize = 4
     private var snakeBody = mutableListOf<Position>()
@@ -18,6 +26,7 @@ class GameViewModel : ViewModel() {
     var snake = MutableLiveData<List<Position>>()
     var state = MutableLiveData<State>()
     var realScore = MutableLiveData<Int>()
+    var lastBest = MutableLiveData<Int>()
 
     data class Position(var x: Int, var y: Int)
     enum class State { STARTED, OVER }
@@ -29,6 +38,7 @@ class GameViewModel : ViewModel() {
         score = 0
         realScore.value = score
         direction = Direction.LEFT
+        setLastBest()
 
         //Generate snake body
         snakeBody.clear()
@@ -92,5 +102,38 @@ class GameViewModel : ViewModel() {
 
     fun changeDirection(dir: Direction) {
         direction = dir
+    }
+
+    fun setLastBest() {
+        viewModelScope.launch {
+            lastBest.postValue(withContext(Dispatchers.IO) {
+                if (repository.selectAll().isEmpty()) 0 else repository.selectAll()[0].bestScore
+            })
+        }
+    }
+
+    fun updateScore(bestScore: Int): Boolean {
+        return (score > bestScore).also {
+            if (it) {
+                viewModelScope.launch {
+                    repository.deleteAll()
+                    repository.insert(Score(1, score))
+                }
+            }
+        }
+    }
+}
+
+/**
+ * View model Factory
+ * reference:https://developer.android.com/codelabs/android-room-with-a-view-kotlin#9
+ */
+class GameViewModelFactory(private val repository: ScoreRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return GameViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
