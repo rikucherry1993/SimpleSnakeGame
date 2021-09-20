@@ -28,6 +28,7 @@
             android:id="@+id/score_label"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
             android:gravity="center_vertical"
             android:text="@string/score_label_text"
             android:textColor="@color/primary_text_color"
@@ -38,12 +39,35 @@
             android:id="@+id/score_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_toStartOf="@+id/restart_button"
             android:layout_toEndOf="@+id/score_label"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:text="@string/default_score_text"
             android:textColor="@color/correct_text_color"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/score_best_label"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@+id/score_text"
+            android:gravity="center_vertical"
+            android:text="@string/score_best_label_text"
+            android:textColor="@color/primary_text_color"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/score_best_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/score_best_label"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/default_score_text"
+            android:textColor="@color/warning_text_color"
             android:textSize="24sp"
             android:textStyle="bold" />
 

@@ -7,7 +7,7 @@ import androidx.room.Query
 @Dao
 interface ScoreDao {
     @Query("SELECT * FROM score_table")
-    fun getBestScore(): List<Score>
+    suspend fun getBestScore(): List<Score>
 
     @Insert
     suspend fun insert(score: Score)

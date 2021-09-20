@@ -20,7 +20,6 @@ class SnakeGameActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        //observe position of apple
         viewModel.applePosition.observe(this, {
             game_view.updateApplePosition(it)
         })
@@ -30,19 +29,38 @@ class SnakeGameActivity : AppCompatActivity() {
             game_view.invalidate()
         })
 
+        viewModel.realScore.observe(this, {
+            score_text.text = it.toString()
+        })
+
+        viewModel.lastBest.observe(this, {
+            score_best_text.text = it.toString()
+        })
+
         viewModel.state.observe(this, {
             game_view.updateState(it)
             when (it) {
                 GameViewModel.State.OVER -> {
                     viewModel.stopTimer()
 
-                    val lastBestScore = viewModel.getLastBest()
-                    val isBest = viewModel.updateScore(lastBestScore)
+                    val lastBestScore = score_best_text.text.toString()
+                    val isBest = viewModel.updateScore(lastBestScore.toInt())
 
                     AlertDialog.Builder(this).setTitle(
-                        if (isBest) {"BEST RECORD!"} else {"GAME OVER!"})
-                        .setMessage("Your score is: ${score_text.text}. "
-                            + if (isBest) {""} else {"Current best record is: $lastBestScore"})
+                        if (isBest) {
+                            "BEST RECORD!"
+                        } else {
+                            "GAME OVER!"
+                        }
+                    )
+                        .setMessage(
+                            "Your score is: ${score_text.text}. "
+                                    + if (isBest) {
+                                ""
+                            } else {
+                                "Current best record is: $lastBestScore"
+                            }
+                        )
                         .setNegativeButton("Quit") { _, _ ->
                             finish()
                         }.setPositiveButton("Play again") { dialog, _ ->
@@ -55,10 +73,6 @@ class SnakeGameActivity : AppCompatActivity() {
                         ).show()
                 }
             }
-        })
-
-        viewModel.realScore.observe(this, {
-            score_text.text = it.toString()
         })
 
         arrow_up_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.UP) }
