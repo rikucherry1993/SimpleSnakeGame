@@ -15,10 +15,8 @@ import kotlin.random.Random
 
 class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
 
-    private val range = 20
-    private var snakeSize = 4
     private var snakeBody = mutableListOf<Position>()
-    private val initialHead = Position(10, 10)
+    private val initialHead = Position(Constants.initialHeadX, Constants.initialHeadY)
     private var direction: Direction = Direction.LEFT
     private var score = 0
     private lateinit var timer: Timer
@@ -44,7 +42,7 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         snakeBody.clear()
         val head = initialHead
         snakeBody.add(head)
-        for (i in 1 until snakeSize) {
+        for (i in 1 until Constants.initialSnakeSize) {
             snakeBody.add(Position(head.x + i, head.y))
         }
         snake.value = snakeBody
@@ -53,7 +51,7 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         applePosition.value = generatePosition(snakeBody)
 
         //start timer
-        startTimerWithPeriod(250, 250)
+        startTimerWithPeriod(Constants.firstPeriod, Constants.firstPeriod)
     }
 
     /**
@@ -64,10 +62,11 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         var position: Position? = null
         if (exclude != null) {
             while (position == null || exclude.contains(position)) {
-                position = Position(Random.nextInt(range), Random.nextInt(range))
+                position =
+                    Position(Random.nextInt(Constants.range), Random.nextInt(Constants.range))
             }
         } else {
-            position = Position(Random.nextInt(range), Random.nextInt(range))
+            position = Position(Random.nextInt(Constants.range), Random.nextInt(Constants.range))
         }
         return position
     }
@@ -83,7 +82,7 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
                     Direction.DOWN -> y++
                 }
                 //after changing new head's position, check if a)body contains head b) head get out of canvas
-                if (snakeBody.contains(this) || x < 0 || x > range - 1 || y < 0 || y > range - 1) {
+                if (snakeBody.contains(this) || x < 0 || x > Constants.range - 1 || y < 0 || y > Constants.range - 1) {
                     state.postValue(State.OVER)
                 }
             }

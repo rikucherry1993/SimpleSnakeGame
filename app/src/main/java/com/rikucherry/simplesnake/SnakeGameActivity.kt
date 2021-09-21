@@ -32,19 +32,19 @@ class SnakeGameActivity : AppCompatActivity() {
         viewModel.realScore.observe(this, {
             score_text.text = it.toString()
 
-            if (it > 10) {
+            if (it > Constants.secondLevelScore) {
                 viewModel.cancelTimer()
-                viewModel.startTimerWithPeriod(200,200)
+                viewModel.startTimerWithPeriod(Constants.secondPeriod, Constants.secondPeriod)
             }
 
-            if (it > 20) {
+            if (it > Constants.thirdLevelScore) {
                 viewModel.cancelTimer()
-                viewModel.startTimerWithPeriod(150,150)
+                viewModel.startTimerWithPeriod(Constants.thirdPeriod, Constants.thirdPeriod)
             }
 
-            if (it > 20) {
+            if (it > Constants.fourthLevelScore) {
                 viewModel.cancelTimer()
-                viewModel.startTimerWithPeriod(120,120)
+                viewModel.startTimerWithPeriod(Constants.fourthPeriod, Constants.fourthPeriod)
             }
 
         })
