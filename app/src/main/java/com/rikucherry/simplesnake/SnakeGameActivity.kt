@@ -70,7 +70,7 @@ class SnakeGameActivity : AppCompatActivity() {
                         }
                     )
                         .setMessage(
-                            "Your score is: ${score_text.text}. "
+                            "Your score is: ${score_text.text}\n"
                                     + if (isBest) {
                                 ""
                             } else {
