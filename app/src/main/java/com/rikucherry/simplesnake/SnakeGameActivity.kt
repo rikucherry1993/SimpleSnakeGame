@@ -31,6 +31,22 @@ class SnakeGameActivity : AppCompatActivity() {
 
         viewModel.realScore.observe(this, {
             score_text.text = it.toString()
+
+            if (it > 10) {
+                viewModel.cancelTimer()
+                viewModel.startTimerWithPeriod(200,200)
+            }
+
+            if (it > 20) {
+                viewModel.cancelTimer()
+                viewModel.startTimerWithPeriod(150,150)
+            }
+
+            if (it > 20) {
+                viewModel.cancelTimer()
+                viewModel.startTimerWithPeriod(120,120)
+            }
+
         })
 
         viewModel.lastBest.observe(this, {
@@ -41,7 +57,7 @@ class SnakeGameActivity : AppCompatActivity() {
             game_view.updateState(it)
             when (it) {
                 GameViewModel.State.OVER -> {
-                    viewModel.stopTimer()
+                    viewModel.cancelTimer()
 
                     val lastBestScore = score_best_text.text.toString()
                     val isBest = viewModel.updateScore(lastBestScore.toInt())
@@ -80,7 +96,7 @@ class SnakeGameActivity : AppCompatActivity() {
         arrow_right_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.RIGHT) }
         arrow_down_button.setOnClickListener { viewModel.changeDirection(GameViewModel.Direction.DOWN) }
         restart_button.setOnClickListener {
-            viewModel.stopTimer()
+            viewModel.cancelTimer()
             viewModel.startGame()
         }
 

@@ -53,7 +53,27 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         applePosition.value = generatePosition(snakeBody)
 
         //start timer
-        timer = fixedRateTimer("periodically timer", false, 200, 200) {
+        startTimerWithPeriod(250, 250)
+    }
+
+    /**
+     * Generate new position for apple randomly
+     * @param exclude
+     */
+    private fun generatePosition(exclude: List<Position>?): Position {
+        var position: Position? = null
+        if (exclude != null) {
+            while (position == null || exclude.contains(position)) {
+                position = Position(Random.nextInt(range), Random.nextInt(range))
+            }
+        } else {
+            position = Position(Random.nextInt(range), Random.nextInt(range))
+        }
+        return position
+    }
+
+    fun startTimerWithPeriod(initialDelay: Long, period: Long) {
+        timer = fixedRateTimer("periodically timer", false, initialDelay, period) {
             // without copy(), snake body list would be changed directly
             val head = snakeBody.first().copy().apply {
                 when (direction) {
@@ -80,23 +100,8 @@ class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
         }
     }
 
-    /**
-     * Generate new position for apple randomly
-     * @param exclude
-     */
-    private fun generatePosition(exclude: List<Position>?): Position {
-        var position: Position? = null
-        if (exclude != null) {
-            while (position == null || exclude.contains(position)) {
-                position = Position(Random.nextInt(range), Random.nextInt(range))
-            }
-        } else {
-            position = Position(Random.nextInt(range), Random.nextInt(range))
-        }
-        return position
-    }
 
-    fun stopTimer() {
+    fun cancelTimer() {
         timer.cancel()
     }
 
