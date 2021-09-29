@@ -96,7 +96,7 @@ class SnakeGameActivity : AppCompatActivity() {
                             run {
                                 dialog.dismiss()
                                 //todo: check permissions
-                                shareScreenShot(takeScreenShot(game_frame))
+                                shareScreenShot(takeScreenShot(game_frame.rootView))
                             }
                         }.setCancelable(
                             false
