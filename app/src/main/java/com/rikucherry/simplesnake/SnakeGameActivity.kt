@@ -1,19 +1,29 @@
 package com.rikucherry.simplesnake
 
+import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.media.MediaScannerConnection
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_snake_game.*
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
+
+private const val WRITE_EXTERNAL_STORAGE_REQUEST = 0X1000
 
 class SnakeGameActivity : AppCompatActivity() {
     private val viewModel: GameViewModel by viewModels {
@@ -95,8 +105,14 @@ class SnakeGameActivity : AppCompatActivity() {
                             dialog, _ ->
                             run {
                                 dialog.dismiss()
-                                //todo: check permissions
-                                shareScreenShot(takeScreenShot(game_frame.rootView))
+
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                                    && !isWritePermissionGranted()
+                                ) {
+                                    requestWritePermission()
+                                } else {
+                                    shareScreenShot(takeScreenShot(game_frame.rootView))
+                                }
                             }
                         }.setCancelable(
                             false
@@ -124,27 +140,31 @@ class SnakeGameActivity : AppCompatActivity() {
         return returnBitmap
     }
 
-    private fun shareScreenShot(resource: Bitmap) {
-        //todo: do export in coroutine
-        var path: String
-        try {
-            val bytes = ByteArrayOutputStream()
-            resource.compress(Bitmap.CompressFormat.PNG, 100, bytes)
-            val file = File(
-                "/storage/emulated/0/DCIM/Camera"
-                        + File.separator + "Snake_"
-                        + System.currentTimeMillis() / 1000 + ".png"
-            )
-
-            val fo = FileOutputStream(file)
-            fo.write(bytes.toByteArray())
-            fo.close()
-            path = file.absolutePath
-        } catch (e: IOException) {
-            path = ""
-            e.printStackTrace()
+    private fun shareScreenShot(bmp: Bitmap) {
+        var path = ""
+        val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         }
 
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "Snake_" + UUID.randomUUID().toString())
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(MediaStore.Images.Media.WIDTH, bmp.width)
+            put(MediaStore.Images.Media.HEIGHT, bmp.height)
+        }
+
+        try {
+            contentResolver.insert(imageCollection, contentValues)?.also { uri ->
+                path = convertUriToPath(uri)
+                contentResolver.openOutputStream(uri).use { outputStream ->
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
 
         MediaScannerConnection.scanFile(this, arrayOf(path), null) { _, uri ->
             val shareIntent = Intent()
@@ -157,4 +177,59 @@ class SnakeGameActivity : AppCompatActivity() {
             )
         }
     }
+
+    private fun convertUriToPath(uri: Uri) : String {
+        var cursor: Cursor? = null
+        try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = contentResolver.query(uri, proj, null, null, null)
+            val columnIdx = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA) ?: -1
+            cursor?.moveToFirst()
+            return cursor?.getString(columnIdx) ?: ""
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cursor?.close()
+        }
+
+        return ""
+    }
+
+    private fun isWritePermissionGranted() =
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PERMISSION_GRANTED
+
+    private fun requestWritePermission() {
+        if (!isWritePermissionGranted()) {
+            val permissions = arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            ActivityCompat.requestPermissions(this, permissions, WRITE_EXTERNAL_STORAGE_REQUEST)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            WRITE_EXTERNAL_STORAGE_REQUEST -> {
+                if (grantResults.isEmpty() || grantResults[0] != PERMISSION_GRANTED) {
+                    Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")).apply {
+                        addCategory(Intent.CATEGORY_DEFAULT)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }.also { intent ->
+                        startActivity(intent)
+                    }
+                }
+                return
+            }
+        }
+
+    }
+
 }
