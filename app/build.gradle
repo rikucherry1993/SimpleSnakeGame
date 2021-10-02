@@ -28,8 +28,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
         }
     }
     compileOptions {
@@ -38,6 +42,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName =
+                    "${applicationId}-${variant.buildType.name}-${versionName}.apk"
+        }
     }
 }
 
