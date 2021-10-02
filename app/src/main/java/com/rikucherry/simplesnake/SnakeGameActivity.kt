@@ -19,11 +19,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.rikucherry.simplesnake.Constants.Companion.WRITE_EXTERNAL_STORAGE_REQUEST
 import kotlinx.android.synthetic.main.activity_snake_game.*
 import java.io.IOException
 import java.util.*
-
-private const val WRITE_EXTERNAL_STORAGE_REQUEST = 0X1000
 
 class SnakeGameActivity : AppCompatActivity() {
     private val viewModel: GameViewModel by viewModels {

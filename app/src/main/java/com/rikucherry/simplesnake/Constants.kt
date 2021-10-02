@@ -14,5 +14,7 @@ class Constants {
         const val secondPeriod: Long = 200
         const val thirdPeriod: Long = 150
         const val fourthPeriod: Long = 120
+
+        const val WRITE_EXTERNAL_STORAGE_REQUEST = 0X1000
     }
 }
