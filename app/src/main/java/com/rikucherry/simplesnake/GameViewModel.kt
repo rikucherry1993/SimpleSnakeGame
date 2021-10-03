@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.rikucherry.simplesnake.data.Score
 import com.rikucherry.simplesnake.data.ScoreRepository
+import com.rikucherry.simplesnake.data.ScoreRepositoryBase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -13,7 +14,7 @@ import java.util.*
 import kotlin.concurrent.fixedRateTimer
 import kotlin.random.Random
 
-class GameViewModel(private val repository: ScoreRepository) : ViewModel() {
+class GameViewModel(private val repository: ScoreRepositoryBase) : ViewModel() {
 
     private var snakeBody = mutableListOf<Position>()
     private val initialHead = Position(Constants.initialHeadX, Constants.initialHeadY)
