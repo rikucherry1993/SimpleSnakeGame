@@ -2,18 +2,18 @@ package com.rikucherry.simplesnake.data
 
 import androidx.annotation.WorkerThread
 
-class ScoreRepository(private val scoreDao: ScoreDao) {
+class ScoreRepository(private val scoreDao: ScoreDao) : ScoreRepositoryBase {
 
     @WorkerThread
-    suspend fun selectAll() = scoreDao.getBestScore()
+    override suspend fun selectAll() = scoreDao.getBestScore()
 
     @WorkerThread
-    suspend fun insert(score: Score) {
+    override suspend fun insert(score: Score) {
         scoreDao.insert(score)
     }
 
     @WorkerThread
-    suspend fun deleteAll() {
+    override suspend fun deleteAll() {
         scoreDao.deleteAll()
     }
 
