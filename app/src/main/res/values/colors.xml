@@ -20,6 +20,7 @@
     <color name="highlight_text_color">#ffcc5c</color>
     <color name="correct_text_color">#018786</color>
     <color name="action_bar_text_color">#FFFFFF</color>
+    <color name="ic_launcher_background">#140d0d</color>
 
     <!-- Game colors   -->
     <color name="apple_color">#ff6f69</color>

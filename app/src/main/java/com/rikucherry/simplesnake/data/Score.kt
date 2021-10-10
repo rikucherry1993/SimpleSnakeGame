@@ -8,5 +8,4 @@ import androidx.room.PrimaryKey
 data class Score(
     @PrimaryKey val _id: Int,
     @ColumnInfo(name = "best_score") val bestScore: Int
-    //todo: add date
 )

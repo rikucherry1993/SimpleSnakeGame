@@ -56,8 +56,9 @@ class GameViewModel(private val repository: ScoreRepositoryBase) : ViewModel() {
     }
 
     /**
-     * Generate new position for apple randomly
-     * @param exclude
+     * Generate a new position for apple randomly
+     * @param exclude range of positions that should be excluded while generating
+     * @return randomly generated position
      */
     private fun generatePosition(exclude: List<Position>?): Position {
         var position: Position? = null
@@ -72,6 +73,11 @@ class GameViewModel(private val repository: ScoreRepositoryBase) : ViewModel() {
         return position
     }
 
+    /**
+     * Start timer with designated time of delay and interval period
+     * @param initialDelay initial delay before starting the timer
+     * @param period interval period of time
+     */
     fun startTimerWithPeriod(initialDelay: Long, period: Long) {
         timer = fixedRateTimer("periodically timer", false, initialDelay, period) {
             // without copy(), snake body list would be changed directly
@@ -82,7 +88,7 @@ class GameViewModel(private val repository: ScoreRepositoryBase) : ViewModel() {
                     Direction.RIGHT -> x++
                     Direction.DOWN -> y++
                 }
-                //after changing new head's position, check if a)body contains head b) head get out of canvas
+                //after changing new head's position, check if a)body contains head b) head sticks out if the canvas
                 if (snakeBody.contains(this) || x < 0 || x > Constants.range - 1 || y < 0 || y > Constants.range - 1) {
                     state.postValue(State.OVER)
                 }
@@ -111,7 +117,7 @@ class GameViewModel(private val repository: ScoreRepositoryBase) : ViewModel() {
         }
     }
 
-    fun setLastBest() {
+    private fun setLastBest() {
         viewModelScope.launch {
             lastBest.postValue(withContext(Dispatchers.IO) {
                 if (repository.selectAll().isEmpty()) 0 else repository.selectAll()[0].bestScore
@@ -130,6 +136,11 @@ class GameViewModel(private val repository: ScoreRepositoryBase) : ViewModel() {
         }
     }
 
+    /**
+     * Check if the new direction is the opposite of current direction
+     * @param old old/current direction
+     * @param new new direction
+     */
     private fun isReverse(old: Direction, new: Direction): Boolean {
         return (old == Direction.UP && new == Direction.DOWN || old == Direction.DOWN && new == Direction.UP) ||
                 (old == Direction.LEFT && new == Direction.RIGHT || old == Direction.RIGHT && new == Direction.LEFT)
@@ -138,7 +149,7 @@ class GameViewModel(private val repository: ScoreRepositoryBase) : ViewModel() {
 
 /**
  * View model Factory
- * reference:https://developer.android.com/codelabs/android-room-with-a-view-kotlin#9
+ * @see <a href="Reference">https://developer.android.com/codelabs/android-room-with-a-view-kotlin#9</a>
  */
 class GameViewModelFactory(private val repository: ScoreRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
